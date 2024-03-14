@@ -1,0 +1,26 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and push frontend Docker image
+        working-directory: tennis-supplies-frontend
+        run: |
+          docker build -t your-dockerhub-username/tennis-supplies-frontend .
+          docker push your-dockerhub-username/tennis-supplies-frontend
+
+      - name: Build and push backend Docker image
+        working-directory: tennis-supplies-backend
+        run: |
+          docker build -t your-dockerhub-username/tennis-supplies-backend .
+          docker push your-dockerhub-username/tennis-supplies-backend
