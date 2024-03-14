@@ -1,4 +1,4 @@
-name: NodeJS with Grunt
+name: Frontend run
 
 on:
   push:
@@ -25,4 +25,4 @@ jobs:
       run: |
         tennis-supplies-frontend
         npm install
-        grunt
+        npm run build
