@@ -23,6 +23,6 @@ jobs:
 
     - name: Build
       run: |
-        tennis-supplies-frontend
+        cd tennis-supplies-frontend
         npm install
         npm run build
