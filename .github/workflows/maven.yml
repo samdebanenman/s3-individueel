@@ -31,21 +31,3 @@ jobs:
       run: |
         cd tennis-supplies-backend
         mvn clean package --file pom.xml
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - name: Deploy to server
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: ${{ secrets.SSH_PORT }}
-        script: |
-          cd /path/to/your/application
-          docker-compose down
-          docker-compose up -d
-
-
