@@ -1,0 +1,11 @@
+version: '1'
+name: tennis-supplies
+services:
+  mssql-server:
+    image: mcr.microsoft.com/mssql/server:latest
+    container_name: mssql-server
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Tennis123"
+    ports:
+      - "1433:1433"

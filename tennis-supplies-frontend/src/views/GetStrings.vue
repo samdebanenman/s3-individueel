@@ -34,7 +34,7 @@ export default defineComponent({
   methods: {
     async getStrings() {
       try {
-        const response = await fetch('http://localhost:8082/getStrings');
+        const response = await fetch(`http://${window.location.hostname}:8082/getStrings`);
         if (!response.ok) {
           console.error('Error fetching strings: Failed to fetch strings');
         }

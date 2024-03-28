@@ -1,0 +1,9 @@
+version: '1'
+name: tennis-supplies
+services:
+  app:
+    image: node:lts
+    build: .
+    container_name: frontend
+    ports:
+      - "8080:8080"
