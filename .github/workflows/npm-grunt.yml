@@ -43,5 +43,6 @@ jobs:
       - name: Build and push Docker image
         run: |
           cd tennis-supplies-frontend
-          docker build -t samdebanenman/tennis-supplies-frontend:latest .
-          docker push samdebanenman/tennis-supplies-frontend:latest
+          docker build -t samdebanenman/tennis-supplies:latest -t samdebanenman/tennis-supplies:frontend .
+          docker push samdebanenman/tennis-supplies:latest
+          docker push samdebanenman/tennis-supplies:frontend

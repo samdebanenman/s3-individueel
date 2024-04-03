@@ -54,10 +54,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: backend-artifact
-          path: tennis-supplies-backend/target/tennis-supplies-backend-0.0.1-SNAPSHOT.jar
+          path: tennis-supplies-backend/target/*.jar
 
       - name: Build and push Docker image
         run: |
           cd tennis-supplies-backend
-          docker build -t samdebanenman/tennis-supplies-backend:latest .
-          docker push samdebanenman/tennis-supplies-backend:latest
+          docker build -t samdebanenman/tennis-supplies:latest -t samdebanenman/tennis-supplies:backend .
+          docker push samdebanenman/tennis-supplies:latest
+          docker push samdebanenman/tennis-supplies:backend
