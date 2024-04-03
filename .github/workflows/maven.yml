@@ -62,5 +62,4 @@ jobs:
           context: tennis-supplies-backend
           push: true
           tags: |
-            samdebanenman/tennis-supplies:latest
-            samdebanenman/tennis-supplies:backend
+            samdebanenman/tennis-supplies:latest-backend
