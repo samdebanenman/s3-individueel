@@ -29,6 +29,13 @@ jobs:
         run: |
           cd tennis-supplies-backend
           mvn clean package --file pom.xml
+
+      - name: Upload JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-artifact
+          path: tennis-supplies-backend/target/*.jar
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -43,9 +50,13 @@ jobs:
       - name: Pull source code
         uses: actions/checkout@v4
 
+      - name: Download JAR file
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-artifact
+
       - name: Build and push Docker image
         run: |
           cd tennis-supplies-backend
-          mvn clean package --file pom.xml
           docker build -t samdebanenman/tennis-supplies-backend:latest .
           docker push samdebanenman/tennis-supplies-backend:latest
