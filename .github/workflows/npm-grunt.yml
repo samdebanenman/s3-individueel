@@ -41,8 +41,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build and push Docker image
-        run: |
-          cd tennis-supplies-frontend
-          docker build -t samdebanenman/tennis-supplies:latest -t samdebanenman/tennis-supplies:frontend .
-          docker push samdebanenman/tennis-supplies:latest
-          docker push samdebanenman/tennis-supplies:frontend
+        uses: docker/build-push-action@v3
+        with:
+          context: tennis-supplies-frontend
+          push: true
+          tags: |
+            samdebanenman/tennis-supplies:latest
+            samdebanenman/tennis-supplies:frontend
+  
