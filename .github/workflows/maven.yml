@@ -31,7 +31,7 @@ jobs:
           mvn clean package --file pom.xml
 
       - name: Upload JAR
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: backend-artifact
           path: tennis-supplies-backend/target/tennis-supplies-backend-0.0.1-SNAPSHOT.jar
@@ -51,7 +51,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download JAR file
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: backend-artifact
           path: tennis-supplies-backend/target/tennis-supplies-backend-0.0.1-SNAPSHOT.jar
