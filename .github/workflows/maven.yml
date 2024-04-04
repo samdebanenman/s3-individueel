@@ -34,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: backend-artifact
-          path: tennis-supplies-backend/target/*.jar
+          path: tennis-supplies-backend/target/tennis-supplies-backend-0.0.1-SNAPSHOT.jar
 
   deploy:
     runs-on: ubuntu-latest
