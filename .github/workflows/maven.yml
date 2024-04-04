@@ -30,12 +30,6 @@ jobs:
           cd tennis-supplies-backend
           mvn clean package --file pom.xml
 
-      - name: Upload JAR
-        uses: actions/upload-artifact@v3
-        with:
-          name: backend-artifact
-          path: tennis-supplies-backend/target/tennis-supplies-backend-0.0.1-SNAPSHOT.jar
-
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -50,16 +44,10 @@ jobs:
       - name: Pull source code
         uses: actions/checkout@v4
 
-      - name: Download JAR file
-        uses: actions/download-artifact@v3
-        with:
-          name: backend-artifact
-          path: tennis-supplies-backend/target/tennis-supplies-backend-0.0.1-SNAPSHOT.jar
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
           context: tennis-supplies-backend
           push: true
           tags: |
-            samdebanenman/tennis-supplies:latest-backend
+            samdebanenman/tennis-supplies:latest-frontend
