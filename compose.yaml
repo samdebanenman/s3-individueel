@@ -1,5 +1,4 @@
-version: '1'
-name: tennis-supplies
+version: '3.8'
 services:
   mssql-server:
     image: mcr.microsoft.com/mssql/server:latest
@@ -7,5 +6,23 @@ services:
     environment:
       ACCEPT_EULA: "Y"
       SA_PASSWORD: "Tennis123"
+    volumes:
+      - "./mssql/data/:/var/opt/mssql/data/"
+      - "./mssql/log/:/var/opt/mssql/log/"
+      - "./mssql/secrets/:/var/opt/mssql/secrets/"
     ports:
       - "1433:1433"
+
+  tennis-supplies-frontend:
+    image: samdebanenman/tennis-supplies:latest-frontend
+    ports:
+      - "8080:8080"
+    restart: always
+
+  tennis-supplies-backend:
+    image: samdebanenman/tennis-supplies:latest-backend
+    ports:
+      - "8082:8082"
+    restart: always
+    depends_on:
+      - mssql-server
