@@ -12,7 +12,7 @@ services:
       - "./mssql/secrets/:/var/opt/mssql/secrets/"
     ports:
       - "1433:1433"
-
+    restart: always
   tennis-supplies-frontend:
     image: samdebanenman/tennis-supplies:latest-frontend
     ports:
