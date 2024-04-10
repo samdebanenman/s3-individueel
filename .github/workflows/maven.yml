@@ -48,7 +48,10 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
           cd tennis-supplies-backend
-          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Tennis-supplies-backend -Dsonar.projectName='Tennis supplies backend'
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+          -Dsonar.host.url=${SONAR_HOST_URL} \
+          -Dsonar.projectKey=Tennis-supplies-backend \
+          -Dsonar.projectName='Tennis supplies backend'
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -81,6 +84,3 @@ jobs:
           push: true
           tags: |
             samdebanenman/tennis-supplies:latest-backend
-  
-        
-
