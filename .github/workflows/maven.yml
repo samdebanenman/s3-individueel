@@ -56,7 +56,7 @@ jobs:
 
       - name: Run SonarQube Analysis
         run: |
-          # Run SonarQube analysis
+          cd tennis-supplies-backend
           NGROK_URL=$(grep NGROK_URL $GITHUB_ENV | cut -d'=' -f2)
           mvn sonar:sonar -Dsonar.host.url=$NGROK_URL -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }}
 
