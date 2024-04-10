@@ -9,3 +9,4 @@ mssql
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/s3-individueel.iml
 /.idea/vcs.xml
+.env

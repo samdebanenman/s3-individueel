@@ -48,7 +48,14 @@ services:
     volumes:
       - postgresql:/var/lib/postgresql
       - postgresql_data:/var/lib/postgresql/data
-
+  ngrok:
+    image: wernight/ngrok
+    ports:
+      - "4040:4040"  # Expose ngrok web interface port
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+      - NGROK_PORT=9000
+    command: ngrok http 9000
 volumes:
   sonarqube_data:
   sonarqube_extensions:
