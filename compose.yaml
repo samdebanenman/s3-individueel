@@ -55,7 +55,7 @@ services:
     environment:
       - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
       - NGROK_PORT=9000
-    command: ngrok http 9000
+    command: ngrok http sonarqube:9000
 volumes:
   sonarqube_data:
   sonarqube_extensions:
