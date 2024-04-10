@@ -41,6 +41,12 @@ jobs:
         with:
           java-version: '21'
           distribution: 'oracle'
+
+      - name: Download ngrok
+        run: |
+          wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+          unzip ngrok-stable-linux-amd64.zip
+
       - name: Start ngrok tunnel and capture URL
         id: ngrok
         run: |
