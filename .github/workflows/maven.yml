@@ -30,40 +30,6 @@ jobs:
           cd tennis-supplies-backend
           mvn clean package --file pom.xml
 
-  analyze:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          java-version: '21'
-          distribution: 'oracle'
-
-      - name: Download ngrok
-        run: |
-          wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
-          unzip ngrok-stable-linux-amd64.zip
-
-      - name: Start ngrok tunnel and capture URL
-        id: ngrok
-        run: |
-          ./ngrok authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
-          NGROK_URL=$(./ngrok http 9000 | grep -oP 'https://\S+' | head -n1)
-          echo "NGROK_URL=$NGROK_URL" >> $GITHUB_ENV
-
-      - name: Run SonarQube Analysis
-        run: |
-          cd tennis-supplies-backend
-          NGROK_URL=$(grep NGROK_URL $GITHUB_ENV | cut -d'=' -f2)
-          mvn sonar:sonar -Dsonar.host.url=$NGROK_URL -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }}
-
-      - name: Stop ngrok tunnel
-        run: pkill ngrok
-
-
   deploy:
     runs-on: ubuntu-latest
     needs: build

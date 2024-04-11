@@ -30,6 +30,7 @@ services:
     image: sonarqube:community
     depends_on:
       - db
+    restart: always
     environment:
       SONAR_JDBC_URL: jdbc:postgresql://db:5432/sonar
       SONAR_JDBC_USERNAME: sonar
@@ -42,20 +43,14 @@ services:
       - "9000:9000"
   db:
     image: postgres:12
+    restart: always
     environment:
       POSTGRES_USER: sonar
       POSTGRES_PASSWORD: sonar
     volumes:
       - postgresql:/var/lib/postgresql
       - postgresql_data:/var/lib/postgresql/data
-  ngrok:
-    image: wernight/ngrok
-    ports:
-      - "4040:4040"  # Expose ngrok web interface port
-    environment:
-      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
-      - NGROK_PORT=9000
-    command: ngrok http sonarqube:9000
+
 volumes:
   sonarqube_data:
   sonarqube_extensions:
