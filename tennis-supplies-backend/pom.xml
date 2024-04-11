@@ -14,9 +14,10 @@
 	<name>tennis-supplies-backend</name>
 	<description>tennis-supplies-backend</description>
 	<properties>
-		<sonar.host.url>http://localhost:9000/</sonar.host.url>
-		<sonar.projectKey>your_project_key</sonar.projectKey>
-		<sonar.projectName>Your Project Name</sonar.projectName>
+		<sonar.host.url>http://localhost:9000</sonar.host.url>
+		<sonar.projectKey>Tennis-supplies-backend</sonar.projectKey>
+		<sonar.token>sqa_455250a87b9a459bc63631a907b740c41f70f69c</sonar.token>
+		<sonar.java.binaries>target/classes</sonar.java.binaries>
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
@@ -55,12 +56,14 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
 				<groupId>org.sonarsource.scanner.maven</groupId>
 				<artifactId>sonar-maven-plugin</artifactId>
+				<version>3.9.0.2155</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

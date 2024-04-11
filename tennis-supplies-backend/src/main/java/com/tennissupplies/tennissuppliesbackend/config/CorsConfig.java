@@ -1,12 +1,9 @@
-package com.tennissupplies.tennissuppliesbackend.Config;
-import org.springframework.context.annotation.Bean;
+package com.tennissupplies.tennissuppliesbackend.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
+import org.springframework.context.annotation.Bean;
 @Configuration
 public class CorsConfig {
 

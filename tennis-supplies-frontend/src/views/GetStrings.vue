@@ -2,6 +2,7 @@
   <div>
     <h2>Strings from Database</h2>
     <table>
+      <caption>Strings from db</caption>
       <thead>
       <tr>
         <th>ID</th>
