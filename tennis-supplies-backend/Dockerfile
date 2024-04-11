@@ -1,9 +1,6 @@
 # Use JDK 21 as base image
 FROM openjdk:21-jdk-slim
 
-RUN addgroup -S nonroot \
-    && adduser -S nonroot -G nonroot \
-USER nonroot
 # Set the working directory in the container
 WORKDIR /app
 
