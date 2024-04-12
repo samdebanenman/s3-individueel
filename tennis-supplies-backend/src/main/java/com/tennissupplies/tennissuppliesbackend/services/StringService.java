@@ -9,13 +9,18 @@ import java.util.List;
 
 @Service
 public class StringService {
+    private final StringRepository stringRepository;
 
+    // Constructor injection
     @Autowired
-    private StringRepository stringRepository;
+    public StringService(StringRepository stringRepository) {
+        this.stringRepository = stringRepository;
+    }
 
     public List<StringEntity> list() {
         return stringRepository.findAll();
     }
+
     public void setString(String newString) {
         StringEntity stringEntity = new StringEntity(newString);
         stringRepository.save(stringEntity);

@@ -47,7 +47,3 @@ import { AxiosError } from 'axios';
     }
   };
 </script>
-
-<style scoped>
-
-</style>
