@@ -15,7 +15,6 @@
 </template>
 
 <script lang="ts">
-import { AxiosError } from 'axios';
   export default {
     data() {
       return {
@@ -38,8 +37,8 @@ import { AxiosError } from 'axios';
           }
           this.message = 'String added successfully';
           this.newString = ''; // Clear input field
-        } catch (error) {
-          const err = error as AxiosError;
+        } catch (err) {
+          if (err instanceof Error)
           console.error('Error adding string:', err.message);
           this.message = 'Failed to add string';
         }

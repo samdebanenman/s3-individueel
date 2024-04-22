@@ -11,6 +11,7 @@ import { RouterLink, RouterView } from 'vue-router'
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/GetStrings">get strings</RouterLink>
         <RouterLink to="/SetString">Add string</RouterLink>
+        <RouterLink to="/LaneRental">Rent Lane</RouterLink>
       </nav>
     </div>
   </header>

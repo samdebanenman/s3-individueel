@@ -25,6 +25,11 @@ const router = createRouter({
       path: '/SetString',
       name: 'SetString',
       component: () => import('../views/SetString.vue')
+    },
+    {
+      path: '/LaneRental',
+      name: 'LaneRental',
+      component: () => import('../views/LaneRental.vue')
     }
   ]
 })

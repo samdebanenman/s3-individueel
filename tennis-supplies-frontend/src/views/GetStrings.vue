@@ -21,7 +21,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { AxiosError } from 'axios';
 
 export default defineComponent({
   data() {
@@ -40,8 +39,8 @@ export default defineComponent({
           console.error('Error fetching strings: Failed to fetch strings');
         }
         this.strings = await response.json();
-      } catch (error) {
-        const err = error as AxiosError;
+      } catch (err) {
+        if (err instanceof Error)
         console.error('Error fetching strings:', err.message);
       }
     }
