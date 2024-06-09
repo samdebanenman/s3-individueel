@@ -1,5 +1,6 @@
 package com.tennissupplies.tennissuppliesbackend.services;
 
+import com.tennissupplies.tennissuppliesbackend.controller.WebSocketController;
 import com.tennissupplies.tennissuppliesbackend.models.Category;
 import com.tennissupplies.tennissuppliesbackend.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +10,13 @@ import java.util.List;
 
 @Service
 public class CategoryService {
-
+    private final CategoryRepository categoryRepository;
+    private final WebSocketController webSocketController;
     @Autowired
-    private CategoryRepository categoryRepository;
+    public CategoryService(CategoryRepository categoryRepository, WebSocketController webSocketController) {
+        this.webSocketController = webSocketController;
+        this.categoryRepository = categoryRepository;
+    }
 
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
@@ -22,10 +27,14 @@ public class CategoryService {
     }
 
     public Category saveCategory(Category category) {
-        return categoryRepository.save(category);
+        Category cat = categoryRepository.save(category);
+        webSocketController.notifyProductChange();
+        return cat;
     }
 
     public void deleteCategory(Long id) {
+        webSocketController.notifyProductChange();
         categoryRepository.deleteById(id);
+
     }
 }

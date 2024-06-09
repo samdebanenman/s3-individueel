@@ -40,6 +40,7 @@ export default defineComponent({
       categories: [] as Category[],
       name: '',
       selectedCategory: '',
+      socket: null as WebSocket | null,
     };
   },
   methods: {
@@ -50,20 +51,43 @@ export default defineComponent({
           category: this.selectedCategory,
         },
       })
-          .then(response => {
-            this.products = response.data;
-          });
+        .then(response => {
+          this.products = response.data;
+        });
     },
     fetchCategories() {
       axios.get('http://localhost:8082/api/categories')
-          .then(response => {
-            this.categories = response.data;
-          });
+        .then(response => {
+          this.categories = response.data;
+        });
+    },
+    connectWebSocket() {
+      this.socket = new WebSocket('ws://localhost:8082/ws');
+
+      this.socket.onmessage = (event) => {
+        console.log('WebSocket message received:', event.data);
+        if (event.data === 'Product changed') {
+          this.fetchProducts();
+        }
+      }
+
+      this.socket.onopen = () => {
+        console.log('WebSocket connection established');
+      };
+
+      this.socket.onclose = () => {
+        console.log('WebSocket connection closed');
+      };
+
+      this.socket.onerror = (error) => {
+        console.error('WebSocket error:', error);
+      };
     },
   },
   mounted() {
     this.fetchProducts();
     this.fetchCategories();
+    this.connectWebSocket();
   },
 });
 </script>
