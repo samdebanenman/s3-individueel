@@ -12,7 +12,7 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedOrigin("http://localhost:8080"); // Allow requests from this origin
-
+        config.addAllowedOrigin("http://localhost:8081");
         config.addAllowedHeader("*"); // Allow all headers
         config.addAllowedMethod("*"); // Allow all HTTP methods
         source.registerCorsConfiguration("/**", config);
