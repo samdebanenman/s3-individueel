@@ -2,6 +2,7 @@ version: '3.8'
 services:
   mssql-server:
     image: mcr.microsoft.com/mssql/server:latest
+    pull_policy: always
     container_name: mssql-server
     environment:
       ACCEPT_EULA: "Y"
@@ -15,12 +16,20 @@ services:
     restart: always
   tennis-supplies-frontend:
     image: samdebanenman/tennis-supplies:latest-frontend
+    pull_policy: always
     ports:
       - "8080:8080"
+    restart: always
+  tennis-supplies-admin-frontend:
+    image: samdebanenman/tennis-supplies:latest-admin-frontend
+    pull_policy: always
+    ports:
+      - "8081:8080"
     restart: always
 
   tennis-supplies-backend:
     image: samdebanenman/tennis-supplies:latest-backend
+    pull_policy: always
     ports:
       - "8082:8082"
     restart: always
