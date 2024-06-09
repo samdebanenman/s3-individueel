@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 public class StringController {
@@ -23,20 +24,20 @@ public class StringController {
     }
 
     @PostMapping("/addString")
-    public void addString(@RequestBody String newString) {
-        try {
-            stringService.setString(newString);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to add string to the database", e);
-        }
+    public CompletableFuture<ResponseEntity<Void>> addString(@RequestBody String newString) {
+        return stringService.setString(newString)
+                .thenApply(aVoid -> new ResponseEntity<Void>(HttpStatus.OK))
+                .exceptionally(e -> {
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to add string to the database", e);
+                });
     }
+
     @GetMapping("/getStrings")
-    public ResponseEntity<List<StringEntity>> getAllStrings() {
-        try {
-            List<StringEntity> strings = stringService.list();
-            return new ResponseEntity<>(strings, HttpStatus.OK);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to retrieve strings from the database", e);
-        }
+    public CompletableFuture<ResponseEntity<List<StringEntity>>> getAllStrings() {
+        return stringService.list()
+                .thenApply(strings -> new ResponseEntity<>(strings, HttpStatus.OK))
+                .exceptionally(e -> {
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to retrieve strings from the database", e);
+                });
     }
 }

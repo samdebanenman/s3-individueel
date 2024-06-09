@@ -25,7 +25,7 @@
     methods: {
       async addString() {
         try {
-          const response = await fetch(`http://${window.location.hostname}:8082/addString`, {
+          const response = await fetch(`http://localhost:8082/addString`, {
             method: 'POST',
             headers: {
               'Content-type': 'application/json'

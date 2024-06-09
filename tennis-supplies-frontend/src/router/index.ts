@@ -27,9 +27,9 @@ const router = createRouter({
       component: () => import('../views/SetString.vue')
     },
     {
-      path: '/LaneRental',
-      name: 'LaneRental',
-      component: () => import('../views/LaneRental.vue')
+      path: '/ProductList',
+      name: 'ProductList',
+      component: () => import('../views/ProductList.vue')
     }
   ]
 })

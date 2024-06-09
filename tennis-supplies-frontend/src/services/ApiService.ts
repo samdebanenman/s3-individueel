@@ -4,15 +4,24 @@ interface User {
 
 }
 
-const BASE_URL = `http://${window.location.hostname}:8082`;
+const BASE_URL = `http://localhost:8082`;
 
 
 export async function getAllLanes(startTimeInUnix: bigint): Promise<Response> {
   try {
-    const response = await fetch(`${BASE_URL}/allLanes`);
+    const requestBody = JSON.stringify({ startTime: Number(startTimeInUnix) });
+    const response = await fetch(`${BASE_URL}/allLanes`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: requestBody,
+    });
+
     if (!response.ok) {
       console.error('Error fetching lanes');
     }
+
     return await response.json();
   } catch (error) {
     console.error('Error getting lanes:', error);
@@ -20,7 +29,7 @@ export async function getAllLanes(startTimeInUnix: bigint): Promise<Response> {
   }
 }
 
-async function getLane(laneNo: number): Promise<Response> {
+async function getLane(laneNo: number, startTimeInUnix: bigint): Promise<Response> {
   try {
     const response = await fetch(`${BASE_URL}/lane/${laneNo}`);
     if (!response.ok) {
