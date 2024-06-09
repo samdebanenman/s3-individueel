@@ -1,80 +1,75 @@
 <template>
   <div>
-    <h2>{{ product.id ? 'Edit' : 'Add' }} Product</h2>
-    <form @submit.prevent="submitForm">
-      <div>
-        <label>Name:</label>
-        <input v-model="product.name" required />
-      </div>
-      <div>
-        <label>Description:</label>
-        <textarea v-model="product.description" required></textarea>
-      </div>
-      <div>
-        <label>Price:</label>
-        <input type="number" v-model="product.price" required />
-      </div>
-      <div>
-        <label>Categories:</label>
-        <select multiple v-model="selectedCategories">
-          <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
-        </select>
-      </div>
-      <button type="submit">Submit</button>
+    <h2>Add/Edit Product</h2>
+    <form @submit.prevent="saveProduct">
+      <label for="name">Name:</label>
+      <input v-model="product.name" id="name" required />
+
+      <label for="description">Description:</label>
+      <input v-model="product.description" id="description" required />
+
+      <label for="price">Price:</label>
+      <input type="number" v-model="product.price" id="price" required />
+
+      <label for="categories">Categories:</label>
+      <select v-model="selectedCategories" multiple>
+        <option v-for="category in categories" :key="category.id" :value="category.id">
+          {{ category.name }}
+        </option>
+      </select>
+
+      <button type="submit">Save</button>
     </form>
   </div>
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import axios from 'axios';
 
-export default {
+interface Category {
+  id: number;
+  name: string;
+}
+
+interface Product {
+  id?: number;
+  name: string;
+  description: string;
+  price: number;
+  categories: Category[];
+}
+
+export default defineComponent({
   props: {
     product: {
-      type: Object,
-      default: () => ({
-        name: '',
-        description: '',
-        price: 0,
-        categories: []
-      })
+      type: Object as () => Product,
+      required: true
     }
   },
   data() {
     return {
-      categories: [],
-      selectedCategories: []
+      categories: [] as Category[],
+      selectedCategories: this.product.categories.map((c: Category) => c.id)
     };
   },
   methods: {
     fetchCategories() {
       axios.get('http://localhost:8082/api/categories')
-        .then(response => {
-          this.categories = response.data;
-          this.selectedCategories = this.product.categories ? this.product.categories.map(c => c.id) : [];
-        });
+          .then(response => {
+            this.categories = response.data;
+          });
     },
-    submitForm() {
-      const productData = {
-        ...this.product,
-        categories: this.selectedCategories.map(id => ({ id }))
-      };
-
-      if (this.product.id) {
-        axios.put(`http://localhost:8082/api/products/${this.product.id}`, productData)
+    saveProduct() {
+      this.product.categories = this.categories.filter(c => this.selectedCategories.includes(c.id));
+      axios.post('http://localhost:8082/api/products', this.product)
           .then(() => {
-            this.$emit('refresh');
+            this.$emit('saved');
           });
-      } else {
-        axios.post('http://localhost:8082/api/products', productData)
-          .then(() => {
-            this.$emit('refresh');
-          });
-      }
     }
   },
   mounted() {
     this.fetchCategories();
   }
-};
+});
 </script>

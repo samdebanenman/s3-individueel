@@ -1,7 +1,15 @@
 <template>
   <div>
     <h1>Manage Products</h1>
-    <button @click="addProduct">Add Product</button>
+    <form @submit.prevent="saveProduct">
+      <input v-model="product.name" placeholder="Product name" required />
+      <input v-model="product.description" placeholder="Product description" required />
+      <input type="number" v-model="product.price" placeholder="Product price" required />
+      <select v-model="selectedCategories" multiple>
+        <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
+      </select>
+      <button type="submit">Save</button>
+    </form>
     <ul>
       <li v-for="product in products" :key="product.id">
         <h3>{{ product.name }}</h3>
@@ -11,56 +19,71 @@
         <button @click="deleteProduct(product.id)">Delete</button>
       </li>
     </ul>
-    <ProductForm v-if="showForm" :product="currentProduct" @refresh="fetchProducts" />
   </div>
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import axios from 'axios';
-import ProductForm from '../components/ProductForm.vue';
 
-export default {
-  components: {
-    ProductForm
-  },
+interface Category {
+  id: number;
+  name: string;
+}
+
+interface Product {
+  id?: number;
+  name: string;
+  description: string;
+  price: number;
+  categories: Category[];
+}
+
+export default defineComponent({
   data() {
     return {
-      products: [],
-      showForm: false,
-      currentProduct: null
+      products: [] as Product[],
+      categories: [] as Category[],
+      product: { name: '', description: '', price: 0, categories: [] } as Product,
+      selectedCategories: [] as number[]
     };
   },
   methods: {
     fetchProducts() {
       axios.get('http://localhost:8082/api/products')
-        .then(response => {
-          this.products = response.data;
-          this.showForm = false;
-          this.currentProduct = null;
-        });
+          .then(response => {
+            this.products = response.data;
+          });
     },
-    addProduct() {
-      this.currentProduct = {
-        name: '',
-        description: '',
-        price: 0,
-        categories: []
-      };
-      this.showForm = true;
+    fetchCategories() {
+      axios.get('http://localhost:8082/api/categories')
+          .then(response => {
+            this.categories = response.data;
+          });
     },
-    editProduct(product) {
-      this.currentProduct = { ...product };
-      this.showForm = true;
+    saveProduct() {
+      this.product.categories = this.categories.filter(c => this.selectedCategories.includes(c.id));
+      axios.post('http://localhost:8082/api/products', this.product)
+          .then(() => {
+            this.fetchProducts();
+            this.product = { name: '', description: '', price: 0, categories: [] };
+            this.selectedCategories = [];
+          });
     },
-    deleteProduct(id) {
+    editProduct(product: Product) {
+      this.product = { ...product };
+      this.selectedCategories = product.categories.map(c => c.id);
+    },
+    deleteProduct(id: number | undefined) {
       axios.delete(`http://localhost:8082/api/products/${id}`)
-        .then(() => {
-          this.fetchProducts();
-        });
+          .then(() => {
+            this.fetchProducts();
+          });
     }
   },
   mounted() {
     this.fetchProducts();
+    this.fetchCategories();
   }
-};
+});
 </script>

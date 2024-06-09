@@ -17,13 +17,27 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import axios from 'axios';
 
-export default {
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  categories: Category[];
+}
+
+interface Category {
+  id: number;
+  name: string;
+}
+
+export default defineComponent({
   data() {
     return {
-      products: [],
-      categories: [],
+      products: [] as Product[],
+      categories: [] as Category[],
       name: '',
       selectedCategory: '',
     };
@@ -36,20 +50,20 @@ export default {
           category: this.selectedCategory,
         },
       })
-        .then(response => {
-          this.products = response.data;
-        });
+          .then(response => {
+            this.products = response.data;
+          });
     },
     fetchCategories() {
       axios.get('http://localhost:8082/api/categories')
-        .then(response => {
-          this.categories = response.data;
-        });
+          .then(response => {
+            this.categories = response.data;
+          });
     },
   },
   mounted() {
     this.fetchProducts();
     this.fetchCategories();
   },
-};
+});
 </script>
