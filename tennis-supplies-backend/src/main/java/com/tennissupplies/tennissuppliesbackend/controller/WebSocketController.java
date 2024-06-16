@@ -1,5 +1,6 @@
 package com.tennissupplies.tennissuppliesbackend.controller;
 
+import io.micrometer.common.lang.NonNull;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.CloseStatus;
@@ -13,21 +14,22 @@ import java.util.HashSet;
 
 @Controller
 public class WebSocketController extends TextWebSocketHandler {
-
+    
     static HashSet<WebSocketSession> sessions = new HashSet<>();
 
         @Override
-        public void handleTextMessage(WebSocketSession session, TextMessage message) {
+        public void handleTextMessage(@NonNull WebSocketSession session, @NonNull TextMessage message) throws Exception {
+            super.handleTextMessage(session, message);
         }
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+    public void afterConnectionEstablished(@NonNull WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
         sessions.add(session);
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+    public void afterConnectionClosed(@NonNull WebSocketSession session,@NonNull CloseStatus status) throws Exception {
         sessions.remove(session);
         super.afterConnectionClosed(session, status);
     }

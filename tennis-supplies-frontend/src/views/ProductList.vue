@@ -52,7 +52,11 @@ export default defineComponent({
         },
       })
         .then(response => {
-          this.products = response.data;
+          this.products = response.data.filter((product : Product) => {
+            const matchesName = this.name ? product.name.toLowerCase().includes(this.name.toLowerCase()) : true;
+            const matchesCategory = this.selectedCategory ? product.categories.some(cat => cat.id == parseInt(this.selectedCategory)) : true;
+            return matchesName && matchesCategory;
+          });
         });
     },
     fetchCategories() {

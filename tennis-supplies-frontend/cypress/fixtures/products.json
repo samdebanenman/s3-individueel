@@ -1,0 +1,30 @@
+[
+  {
+    "id": 2,
+    "name": "Wilson Balls",
+    "description": "Balls from Wilson",
+    "price": 2,
+    "categories": [
+      {
+        "id": 2,
+        "name": "Wilson"
+      },
+      {
+        "id": 1,
+        "name": "Tennis Balls"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Tennis racket",
+    "description": "Test",
+    "price": 5,
+    "categories": [
+      {
+        "id": 3,
+        "name": "Tennis Rackets"
+      }
+    ]
+  }
+]

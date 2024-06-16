@@ -33,8 +33,8 @@ public class CategoryService {
     }
 
     public void deleteCategory(Long id) {
-        webSocketController.notifyProductChange();
         categoryRepository.deleteById(id);
+        webSocketController.notifyProductChange();
 
     }
 }

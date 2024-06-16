@@ -36,7 +36,7 @@ public class ProductService {
     }
 
     public void deleteProduct(Long id) {
-        webSocketController.notifyProductChange();
         productRepository.deleteById(id);
+        webSocketController.notifyProductChange();
     }
 }
