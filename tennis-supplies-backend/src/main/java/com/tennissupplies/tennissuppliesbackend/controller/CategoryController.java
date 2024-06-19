@@ -3,19 +3,20 @@ package com.tennissupplies.tennissuppliesbackend.controller;
 import com.tennissupplies.tennissuppliesbackend.models.Category;
 import com.tennissupplies.tennissuppliesbackend.services.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
-
+    private final Logger logger = Logger.getLogger(CategoryController.class.getName());
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
@@ -41,36 +42,32 @@ public class CategoryController {
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void handleEntityNotFoundException(EntityNotFoundException ex) {
-        // Log the exception or do something else, if needed
+        logger.log(Level.WARNING, "Entity not found", ex);
     }
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void handleIllegalArgumentException(IllegalArgumentException ex) {
+        logger.log(Level.WARNING, "Illegal argument", ex);
         // Log the exception or do something else, if needed
     }
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public void handleException(Exception ex) {
+        logger.log(Level.SEVERE, "Internal server error", ex);
         // Log the exception or do something else, if needed
     }
 
     @PostMapping
     public ResponseEntity<Category> createCategory(@RequestBody Category category) {
         try{
-            System.out.println("save category object CONTROLLER: " + (category==null?"null":category.getName()));
-            if(category!=null) System.out.println("########## CAT SRV "+categoryService+"="+categoryService.getClass());
             Category savedCategory = categoryService.saveCategory(category);
-            System.out.println("save category object CONTROLLER: " + (savedCategory==null?"null":savedCategory.getName()));
-
             return ResponseEntity.ok(savedCategory);
         }
         catch (IllegalArgumentException e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
         catch (Exception e)
         {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

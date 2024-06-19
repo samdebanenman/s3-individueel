@@ -10,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +31,6 @@ class CategoryServiceUnitTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-/*
     @Test
     void testGetCategoryById() {
         Category mockCategory = new Category();
@@ -52,9 +50,7 @@ class CategoryServiceUnitTest {
         when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
 
         // Act & Assert: Expect an EntityNotFoundException to be thrown
-        assertThrows(EntityNotFoundException.class, () -> {
-            categoryService.getCategoryById(1L);
-        });
+        assertThrows(EntityNotFoundException.class, () -> categoryService.getCategoryById(1L));
     }
 
         @Test
@@ -100,9 +96,7 @@ class CategoryServiceUnitTest {
     @Test
     void testSaveCategory_NullCategory() {
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            categoryService.saveCategory(null);
-        });
+        assertThrows(IllegalArgumentException.class, () -> categoryService.saveCategory(null));
         verify(categoryRepository, never()).save(any());
     }
 
@@ -110,9 +104,6 @@ class CategoryServiceUnitTest {
     void testDeleteCategory_NonExistingId() {
         doNothing().when(categoryRepository).deleteById(anyLong());
 
-        assertThrows(EntityNotFoundException.class, () -> {
-            categoryService.deleteCategory(1L);
-        });
+        assertThrows(EntityNotFoundException.class, () -> categoryService.deleteCategory(1L));
     }
- */
 }

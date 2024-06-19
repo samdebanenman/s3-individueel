@@ -30,7 +30,6 @@ public class CategoryService {
     }
 
     public Category saveCategory(Category savcategory) {
-        System.out.println("save category object: " + (savcategory==null?"null":savcategory.getName()));
         if (savcategory == null || savcategory.getName() == null || savcategory.getName().isEmpty()) {
             throw new IllegalArgumentException("Category name cannot be null or empty");
         }
@@ -40,7 +39,6 @@ public class CategoryService {
     }
 
     public void deleteCategory(Long id) {
-        System.out.println("delete category id: " + id);
         if (!categoryRepository.existsById(id)) {
             throw new EntityNotFoundException("Category with id " + id + " not found");
         }
