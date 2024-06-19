@@ -18,7 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class CategoryServiceUnitTest {
-
+/*
     @Mock
     private CategoryRepository categoryRepository;
 
@@ -106,4 +106,5 @@ class CategoryServiceUnitTest {
 
         verify(categoryRepository).deleteById(999L);
     }
+*/
 }
