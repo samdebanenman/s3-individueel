@@ -19,6 +19,8 @@
 		<sonar.token>sqa_455250a87b9a459bc63631a907b740c41f70f69c</sonar.token>
 		<sonar.java.binaries>target/classes</sonar.java.binaries>
 		<java.version>21</java.version>
+		<sonar.organization>samdebanenman</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 	<dependencies>
 		<dependency>

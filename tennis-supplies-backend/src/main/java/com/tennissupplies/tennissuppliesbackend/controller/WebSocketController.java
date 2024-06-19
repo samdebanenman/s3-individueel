@@ -8,13 +8,14 @@ import org.springframework.web.socket.PingMessage;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import java.util.logging.Logger;
 
 import java.nio.ByteBuffer;
 import java.util.HashSet;
 
 @Controller
 public class WebSocketController extends TextWebSocketHandler {
-    
+    Logger logger = Logger.getLogger(WebSocketController.class.getName());
     static HashSet<WebSocketSession> sessions = new HashSet<>();
 
         @Override
@@ -39,7 +40,8 @@ public class WebSocketController extends TextWebSocketHandler {
                 try {
                     session.sendMessage(new TextMessage("Product changed"));
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.info("Error sending notify: " + e.getMessage());
+
                 }
             }
         }
@@ -50,7 +52,7 @@ public class WebSocketController extends TextWebSocketHandler {
                 try {
                     session.sendMessage(new PingMessage(ByteBuffer.wrap(new byte[]{})));
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.info("Error sending heartbeat: " + e.getMessage());
                 }
             }
         }
