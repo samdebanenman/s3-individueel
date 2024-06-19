@@ -3,6 +3,7 @@ package com.tennissupplies.tennissuppliesbackend.services;
 import com.tennissupplies.tennissuppliesbackend.controller.WebSocketController;
 import com.tennissupplies.tennissuppliesbackend.models.Category;
 import com.tennissupplies.tennissuppliesbackend.repository.CategoryRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,7 +19,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class CategoryServiceUnitTest {
-/*
     @Mock
     private CategoryRepository categoryRepository;
 
@@ -32,7 +32,7 @@ class CategoryServiceUnitTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-
+/*
     @Test
     void testGetCategoryById() {
         Category mockCategory = new Category();
@@ -48,14 +48,16 @@ class CategoryServiceUnitTest {
 
     @Test
     void testGetCategoryById_NotFound() {
+        // Arrange: Set up the mock to return an empty Optional
         when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
 
-        Category result = categoryService.getCategoryById(1L);
-
-        assertNull(result);
+        // Act & Assert: Expect an EntityNotFoundException to be thrown
+        assertThrows(EntityNotFoundException.class, () -> {
+            categoryService.getCategoryById(1L);
+        });
     }
 
-    @Test
+        @Test
     void testSaveCategory() {
         Category categoryToSave = new Category();
         categoryToSave.setName("New Category");
@@ -69,9 +71,15 @@ class CategoryServiceUnitTest {
 
     @Test
     void testDeleteCategory() {
+        when(categoryRepository.existsById(1L)).thenReturn(true);
+
+        // Act: Call deleteCategory method on the service
         categoryService.deleteCategory(1L);
 
+        // Assert: Verify that deleteById was called on the repository with the correct ID
         verify(categoryRepository).deleteById(1L);
+
+        // Verify: Ensure webSocketController.notifyProductChange() was called once
     }
 
     @Test
@@ -91,9 +99,10 @@ class CategoryServiceUnitTest {
 
     @Test
     void testSaveCategory_NullCategory() {
-        Category savedCategory = categoryService.saveCategory(null);
 
-        assertNull(savedCategory);
+        assertThrows(IllegalArgumentException.class, () -> {
+            categoryService.saveCategory(null);
+        });
         verify(categoryRepository, never()).save(any());
     }
 
@@ -101,10 +110,9 @@ class CategoryServiceUnitTest {
     void testDeleteCategory_NonExistingId() {
         doNothing().when(categoryRepository).deleteById(anyLong());
 
-        // Deleting a non-existing category
-        assertDoesNotThrow(() -> categoryService.deleteCategory(999L));
-
-        verify(categoryRepository).deleteById(999L);
+        assertThrows(EntityNotFoundException.class, () -> {
+            categoryService.deleteCategory(1L);
+        });
     }
-*/
+ */
 }

@@ -4,23 +4,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tennissupplies.tennissuppliesbackend.models.Category;
 import com.tennissupplies.tennissuppliesbackend.services.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.util.Collections;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import org.springframework.transaction.annotation.Transactional;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(CategoryController.class)
+@SpringBootTest
 @AutoConfigureMockMvc
 class CategoryControllerIntegrationTest {
 
@@ -30,20 +28,31 @@ class CategoryControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @Autowired
     private CategoryService categoryService;
+
+    @BeforeEach
+    void setUp() {
+        // Clean up before each test
+        categoryService.deleteAllCategories();
+    }
+
+    @AfterEach
+    void tearDown() {
+        // Clean up after each test
+        categoryService.deleteAllCategories();
+    }
 
     @Test
     void testGetAllCategories() throws Exception {
         Category category1 = new Category();
-        category1.setId(1L);
         category1.setName("Category 1");
 
         Category category2 = new Category();
-        category2.setId(2L);
         category2.setName("Category 2");
 
-        when(categoryService.getAllCategories()).thenReturn(List.of(category1, category2));
+        categoryService.saveCategory(category1);
+        categoryService.saveCategory(category2);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -55,12 +64,12 @@ class CategoryControllerIntegrationTest {
     @Test
     void testGetCategoryById() throws Exception {
         Category category = new Category();
-        category.setId(1L);
         category.setName("Test Category");
 
-        when(categoryService.getCategoryById(1L)).thenReturn(category);
+        categoryService.saveCategory(category);
+        Long categoryId = category.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/categories/1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/categories/" + categoryId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Test Category"));
@@ -68,8 +77,6 @@ class CategoryControllerIntegrationTest {
 
     @Test
     void testGetCategoryById_NotFound() throws Exception {
-        when(categoryService.getCategoryById(1L)).thenThrow(EntityNotFoundException.class);
-
         mockMvc.perform(MockMvcRequestBuilders.get("/api/categories/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
@@ -80,19 +87,13 @@ class CategoryControllerIntegrationTest {
         Category categoryToCreate = new Category();
         categoryToCreate.setName("New Category");
 
-        Category createdCategory = new Category();
-        createdCategory.setId(1L);
-        createdCategory.setName("New Category");
-
-        when(categoryService.saveCategory(any(Category.class))).thenReturn(createdCategory);
-
         mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryToCreate)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("New Category"));
     }
-/*
+
     @Test
     void testCreateCategory_InvalidInput() throws Exception {
         Category categoryToCreate = new Category(); // Missing name
@@ -102,21 +103,19 @@ class CategoryControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(categoryToCreate)))
                 .andExpect(status().isBadRequest());
     }
-*/
+
     @Test
     void testUpdateCategory() throws Exception {
         Category existingCategory = new Category();
-        existingCategory.setId(1L);
         existingCategory.setName("Existing Category");
 
+        categoryService.saveCategory(existingCategory);
+        Long categoryId = existingCategory.getId();
+
         Category updatedCategory = new Category();
-        updatedCategory.setId(1L);
         updatedCategory.setName("Updated Category");
 
-        when(categoryService.getCategoryById(1L)).thenReturn(existingCategory);
-        when(categoryService.saveCategory(any(Category.class))).thenReturn(updatedCategory);
-
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/categories/1")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/categories/" + categoryId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedCategory)))
                 .andExpect(status().isOk())
@@ -126,10 +125,7 @@ class CategoryControllerIntegrationTest {
     @Test
     void testUpdateCategory_NotFound() throws Exception {
         Category updatedCategory = new Category();
-        updatedCategory.setId(1L);
         updatedCategory.setName("Updated Category");
-
-        when(categoryService.getCategoryById(1L)).thenReturn(null);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/categories/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -139,17 +135,23 @@ class CategoryControllerIntegrationTest {
 
     @Test
     void testDeleteCategory() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/categories/1"))
+        Category category = new Category();
+        category.setName("Category to delete");
+
+        categoryService.saveCategory(category);
+        Long categoryId = category.getId();
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/categories/" + categoryId))
                 .andExpect(status().isOk());
 
-        verify(categoryService).deleteCategory(1L);
+        // Verify the category was deleted
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/categories/" + categoryId))
+                .andExpect(status().isNotFound());
     }
-/*
+
     @Test
     void testDeleteCategory_NotFound() throws Exception {
-
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/categories/10"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/categories/100"))
                 .andExpect(status().isNotFound());
-    }.*/
+    }
 }
-
